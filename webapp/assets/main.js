@@ -83,10 +83,19 @@ const editTodo = (itemId) => {
 	createTodoButton.style.display = "none"
 	updateTodoButton.style.display = "block"
 	const {id, timestamp, status, body} = Todos.filter(todo => todo.id == itemId)[0];
+	axios .patch(`http://localhost:3000/posts/${itemId}`,{
+		id,
+		timestamp,
+		status,
+		body,
+	})
+	.then((res) => console.log(res.data))
+	.catch((err) => console.error(err));
 
 	idField.value = id;
 	timeField.value = getTimeStamp();
 	bodyField.value = body;
+	displayAllTodos();
 }
 
 const generateID = () => {
@@ -107,6 +116,10 @@ const addNewTodo = () => {
 
 const deleteTodo = (itemId) => {
 	Todos = Todos.filter(todo => todo.id != itemId);
+	axios
+	.delete(`http://localhost:3000/posts/${itemId}`,)
+	.then((res) => console.log(res.data))
+	.catch((err) => console.error(err));
 	displayAllTodos();
 }
 
@@ -116,6 +129,14 @@ const updateTodo = () => {
 			todo.status = "Not complete";
 			todo.body = bodyField.value;
 			todo.timestamp = timeField.value;
+			axios.put(`http://localhost:3000/posts/${todo.id}`,{
+				id:todo.id,
+				timestamp: todo.timestamp,
+				body: todo.body,
+				status: todo.status,
+			})
+			.then((res) => console.log(res.data))
+	.catch((err) => console.error(err));
 			return todo;
 		}else{
 			return todo;
@@ -134,6 +155,14 @@ const markTodoAsComplete = (itemId) => {
 	const todos = Todos.map(todo=>{
 		if(todo.id === itemId){
 			todo.status = "Complete";
+			axios.put(`http://localhost:3000/posts/${todo.id}`,{
+				id:todo.id,
+				timestamp: todo.timestamp,
+				body: todo.body,
+				status: todo.status,
+			})
+			.then((res) => console.log(res.data))
+	.catch((err) => console.error(err));
 			return todo;
 		}else{
 			return todo;
